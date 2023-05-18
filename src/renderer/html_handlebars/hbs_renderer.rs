@@ -131,7 +131,7 @@ impl HtmlHandlebars {
 
         if ctx.is_index {
             ctx.data.insert("path".to_owned(), json!("index.md"));
-            ctx.data.insert("path_to_root".to_owned(), json!(""));
+            // ctx.data.insert("path_to_root".to_owned(), json!(""));
             ctx.data.insert("is_index".to_owned(), json!(true));
             let rendered_index = ctx.handlebars.render("index", &ctx.data)?;
             let rendered_index =
