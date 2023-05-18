@@ -8,10 +8,12 @@ mdBook is a utility to create modern online books from Markdown files.
 
 > Code here is a [fix](#how-to-use-it) for Absolute Links with [**site-url**](https://rust-lang.github.io/mdBook/format/configuration/renderers.html?highlight=site-url#html-renderer-options) value setting in **book.toml** config.
 
-Check out the **[User Guide]** for a list of features and installation and usage information.
+> This fix was reported to [mdBook issues](https://github.com/rust-lang/mdBook/pull/1802#issuecomment-1552874669)
+
+Check out the **[User Guide](https://rust-lang.github.io/mdBook/)** for a list of features and installation and usage information.
 The User Guide also serves as a demonstration to showcase what a book looks like.
 
-If you are interested in contributing to the development of mdBook, check out the [Contribution Guide].
+If you are interested in contributing to the development of mdBook, check out the [Contribution Guide](https://github.com/rust-lang/mdBook/blob/master/CONTRIBUTING.md).
 
 ## How to use it
 
@@ -30,20 +32,17 @@ To complement this fix:
 ![Image]({{urlbase}}image.jpg)
 ```
 
-Script [build-dist.sh](build-dist.sh) automate builds by using:
+Script to automate builds:
 
-- **templates** files for: **book.toml**, **index.hbs**, **head.hbs**
-- [mdBook](https://github.com/rust-lang/mdBook.git) fix target build
-- build rendered result to **dist** path rather than default **book**
-
-<small>In case it is necessary, change settings values at script top</small>
+- Take care of: **book.toml**, **index.hbs**, **head.hbs**
+- Use [mdBook](https://github.com/rust-lang/mdBook.git) to build rendered result to **dist** path rather than default **book**
 
 > By using these procedures default **book development** should work as expected
 > For distribution or publish [mdBooks](https://github.com/rust-lang/mdBook.git) follow above instructions or use a script to set __<u>absolute_path</u>__ in **book.toml** and **context.toml**
 
 ## License
 
-All the code in this repository is released under the ***Mozilla Public License v2.0***, for more information take a look at the [LICENSE] file.
+All the code in this repository is released under the ***Mozilla Public License v2.0***, for more information take a look at the [LICENSE](https://github.com/JesusPerez/mdBook/blob/master/LICENSE)
 
 [User Guide]: https://rust-lang.github.io/mdBook/
 [contribution guide]: https://github.com/rust-lang/mdBook/blob/master/CONTRIBUTING.md
