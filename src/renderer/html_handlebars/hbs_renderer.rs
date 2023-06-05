@@ -55,10 +55,16 @@ impl HtmlHandlebars {
         }
 
         let content = ch.content.clone();
+        let content = if let Some(site_url) = &ctx.html_config.site_url {
+            ch.content.clone().replace("](./",&format!("]({}",site_url))
+        } else {
+            ch.content.clone()
+        };
         let content = utils::render_markdown(&content, ctx.html_config.curly_quotes);
 
         let fixed_content =
             utils::render_markdown_with_path(&ch.content, ctx.html_config.curly_quotes, Some(path));
+            // utils::render_markdown_with_path(&ch.content, ctx.html_config.curly_quotes, Some(path));
         if !ctx.is_index && ctx.html_config.print.page_break {
             // Add page break between chapters
             // See https://developer.mozilla.org/en-US/docs/Web/CSS/break-before and https://developer.mozilla.org/en-US/docs/Web/CSS/page-break-before
@@ -97,10 +103,18 @@ impl HtmlHandlebars {
         ctx.data.insert("content".to_owned(), json!(content));
         ctx.data.insert("chapter_title".to_owned(), json!(ch.name));
         ctx.data.insert("title".to_owned(), json!(title));
-        ctx.data.insert(
-            "path_to_root".to_owned(),
-            json!(utils::fs::path_to_root(path)),
-        );
+        if let Some(site_url) = &ctx.html_config.site_url {
+            ctx.data.insert("base_url".to_owned(), json!(site_url));
+            ctx.data.insert(
+                "path_to_root".to_owned(),
+                json!(site_url),
+            );
+        } else {
+            ctx.data.insert(
+                "path_to_root".to_owned(),
+                json!(utils::fs::path_to_root(path)),
+            );
+        }
         if let Some(ref section) = ch.number {
             ctx.data
                 .insert("section".to_owned(), json!(section.to_string()));

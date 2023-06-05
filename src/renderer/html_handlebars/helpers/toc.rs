@@ -24,6 +24,11 @@ impl HelperDef for RenderToc {
         // get value from context data
         // rc.get_path() is current json parent path, you should always use it like this
         // param is the key of value you want to display
+         let base_url = if let Some(val) = ctx.data().get("base_url") {
+            val.as_str().unwrap_or_default()
+        } else {
+            ""
+        };
         let chapters = rc.evaluate(ctx, "@root/chapters").and_then(|c| {
             serde_json::value::from_value::<Vec<BTreeMap<String, String>>>(c.as_json().clone())
                 .map_err(|_| RenderError::new("Could not decode the JSON data"))
@@ -128,9 +133,13 @@ impl HelperDef for RenderToc {
                         // Hack for windows who tends to use `\` as separator instead of `/`
                         .replace('\\', "/");
 
+                    if base_url.is_empty() {
                     // Add link
-                    out.write(&utils::fs::path_to_root(&current_path))?;
-                    out.write(&tmp)?;
+                        out.write(&utils::fs::path_to_root(&current_path))?;
+                        out.write(&tmp)?;
+                    } else {
+                        out.write(format!("{}{}",&base_url,&tmp).as_str())?;
+                    }
                     out.write("\"")?;
 
                     if path == &current_path || is_first_chapter {
