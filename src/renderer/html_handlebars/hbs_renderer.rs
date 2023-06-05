@@ -54,7 +54,6 @@ impl HtmlHandlebars {
                 .insert("git_repository_edit_url".to_owned(), json!(edit_url));
         }
 
-        let content = ch.content.clone();
         let content = if let Some(site_url) = &ctx.html_config.site_url {
             ch.content.clone().replace("](./",&format!("]({}",site_url))
         } else {
