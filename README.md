@@ -1,4 +1,4 @@
-# mdBook with absoulte links via site-url
+# mdBook with absolute links via site-url
 
 [![Build Status](https://github.com/rust-lang/mdBook/workflows/CI/badge.svg?event=push)](https://github.com/rust-lang/mdBook/actions?workflow=CI)
 [![crates.io](https://img.shields.io/crates/v/mdbook.svg)](https://crates.io/crates/mdbook)
