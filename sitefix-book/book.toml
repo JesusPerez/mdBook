@@ -1,0 +1,40 @@
+[book]
+authors = [""]
+language = "en"
+multilingual = false
+src = "src"
+title = ""
+description = ""
+
+[build]
+build-dir = "book"               # the directory where the output is placed
+#create-missing = true            # whether or not to create missing pages
+use-default-preprocessors = true  # use the default preprocessors
+extra-watch-dirs = []             # directories to watch for triggering builds
+
+[output.html]
+theme = "my-theme"
+default-theme = "light"
+preferred-dark-theme = "navy"
+curly-quotes = true
+mathjax-support = false
+site-url = "/doc/"
+copy-fonts = true
+
+#additional-css = [""]
+# additional-js = [""]
+
+#no-section-label = false
+
+#cname = ""
+#input-404 = "not-found.md"
+
+[output.html.fold]
+enable = true    # whether or not to enable section folding
+level = 0         # the depth to start folding
+
+# Default options, load a TOML context file from ./src/context.toml
+[preprocessor.tera]
+command = "mdbook-tera --toml ./context.toml"
+#command = "mdbook-tera --json ./src/context.json"
+
