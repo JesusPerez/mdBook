@@ -17,6 +17,15 @@ If you are interested in contributing to the development of mdBook, check out th
 
 ## How to use it
 
+Look at [sitefix-book](sitefix-book) example
+
+- Set **site-url** value in **book.toml** section [output.html]
+
+```toml
+[output.html]
+site-url = "/ABSOLUTE-ROOT-PATH/"
+```
+
 - Add **base_url** (base href) to rendered files with **site-url** value
 - Replace **SUMMARY.md** entries to include **site-url**
 - Replace **TOC** entries for each sidebar **chapter-item** to include **site-url**
@@ -25,9 +34,28 @@ To complement this fix:
 
 - [mdBook Tera](https://github.com/avitex/mdbook-tera) preprocessor should be added, activated in **book.toml**
 - **./context.toml** has to include **urlbase** with same **site-url** value  
+- Add new <u>theme path</u> to **book.toml** 
+  
+```toml
+[output.html]
+theme = "NEW-THEME-PATH"
+```
+
+- In **index.hbs** fix <u>previous</u> and <u>next</u> templates by using **{{urlbase}}**
+
+```handlebars
+FROM:
+  
+<a rel="prev" href="{{ path_to_root }}{{link}}" ...
+TO:
+<a rel="prev" href="{{urlbase}}{{link}}" ...
+```
+
 - Markdown URLS or SRC in files has to start with **{{urlbase}}** prefix  
 
-```markdown  
+- Create a <u>theme path</u> and copy at least **src/index.hbs** inside.
+
+```markdown
 [Introduction]({{urlbase}}introduction.md)
 ![Image]({{urlbase}}image.jpg)
 ```
