@@ -15,6 +15,12 @@ The User Guide also serves as a demonstration to showcase what a book looks like
 
 If you are interested in contributing to the development of mdBook, check out the [Contribution Guide](https://github.com/rust-lang/mdBook/blob/master/CONTRIBUTING.md).
 
+## Build
+
+```bash
+cargo build --release
+```
+
 ## How to use it
 
 Look at [sitefix-book](sitefix-book) example
@@ -30,10 +36,10 @@ site-url = "/ABSOLUTE-ROOT-PATH/"
 - Replace **SUMMARY.md** entries to include **site-url**
 - Replace **TOC** entries for each sidebar **chapter-item** to include **site-url**
 
-To complement this fix:
-
 - [mdBook Tera](https://github.com/avitex/mdbook-tera) preprocessor should be added, activated in **book.toml**
 - **./context.toml** has to include **urlbase** with same **site-url** value  
+
+- Create a <u>theme path</u> and copy at least **src/index.hbs** inside.
 - Add new <u>theme path</u> to **book.toml** 
   
 ```toml
@@ -41,7 +47,7 @@ To complement this fix:
 theme = "NEW-THEME-PATH"
 ```
 
-- In **index.hbs** fix <u>previous</u> and <u>next</u> templates by using **{{urlbase}}**
+- In **index.hbs** FIX <u>previous</u> and <u>next</u> templates by using **{{urlbase}}**
 
 ```handlebars
 FROM:
@@ -53,17 +59,19 @@ TO:
 
 - Markdown URLS or SRC in files has to start with **{{urlbase}}** prefix  
 
-- Create a <u>theme path</u> and copy at least **src/index.hbs** inside.
-
 ```markdown
 [Introduction]({{urlbase}}introduction.md)
 ![Image]({{urlbase}}image.jpg)
 ```
 
-Script to automate builds:
+Use scripts to automate builds:
 
 - Take care of: **book.toml**, **index.hbs**, **head.hbs**
 - Use [mdBook](https://github.com/rust-lang/mdBook.git) to build rendered result to **dist** path rather than default **book**
+
+```bash
+../target/release/mdbook build --dest-dir dist/doc
+```
 
 > By using these procedures default **book development** should work as expected
 > For distribution or publish [mdBooks](https://github.com/rust-lang/mdBook.git) follow above instructions or use a script to set __<u>absolute_path</u>__ in **book.toml** and **context.toml**
@@ -72,6 +80,6 @@ Script to automate builds:
 
 All the code in this repository is released under the ***Mozilla Public License v2.0***, for more information take a look at the [LICENSE](https://github.com/JesusPerez/mdBook/blob/master/LICENSE)
 
-[User Guide]: https://rust-lang.github.io/mdBook/
-[contribution guide]: https://github.com/rust-lang/mdBook/blob/master/CONTRIBUTING.md
-[LICENSE]: https://github.com/rust-lang/mdBook/blob/master/LICENSE
+[mdBook User Guide](https://rust-lang.github.io/mdBook/)
+[mdBook contribution guide](https://github.com/rust-lang/mdBook/blob/master/CONTRIBUTING.md)
+[mdBook LICENSE](https://github.com/rust-lang/mdBook/blob/master/LICENSE)
