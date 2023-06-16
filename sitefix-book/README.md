@@ -18,7 +18,7 @@ A book example under some path set with **site-url**
 site-url = "/doc/"
 ```
 
-**doc** is <u>absolutec-path</u> declared in **context.toml** as **urlbase**
+**doc** is <u>absolutec-path</u> declared in **context.toml** as **urlbase** and used as {{urlbase}}
 
 ```toml
 urlbase = "/doc/"
