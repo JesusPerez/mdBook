@@ -11,14 +11,14 @@ A book example under some path set with **site-url**
 ../target/release/mdbook build --dest-dir dist/doc
 ```
 
-**doc** is absolute=path declared in **book.toml**  as **site-url**
+**doc** is <u>absolute-path</u> declared in **book.toml**  as **site-url**
 
 ```toml
 [output.html]
 site-url = "/doc/"
 ```
 
-**doc** is absolute=path declared in *context.toml** as {{urlbase}}
+**doc** is <u>absolutec-path</u> declared in **context.toml** as **urlbase**
 
 ```toml
 urlbase = "/doc/"
