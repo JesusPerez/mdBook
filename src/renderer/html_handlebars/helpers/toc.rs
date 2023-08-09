@@ -24,7 +24,7 @@ impl HelperDef for RenderToc {
         // get value from context data
         // rc.get_path() is current json parent path, you should always use it like this
         // param is the key of value you want to display
-         let base_url = if let Some(val) = ctx.data().get("base_url") {
+        let base_url = if let Some(val) = ctx.data().get("base_url") {
             val.as_str().unwrap_or_default()
         } else {
             ""

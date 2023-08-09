@@ -63,7 +63,6 @@ impl HtmlHandlebars {
 
         let fixed_content =
             utils::render_markdown_with_path(&ch.content, ctx.html_config.curly_quotes, Some(path));
-            // utils::render_markdown_with_path(&ch.content, ctx.html_config.curly_quotes, Some(path));
         if !ctx.is_index && ctx.html_config.print.page_break {
             // Add page break between chapters
             // See https://developer.mozilla.org/en-US/docs/Web/CSS/break-before and https://developer.mozilla.org/en-US/docs/Web/CSS/page-break-before
