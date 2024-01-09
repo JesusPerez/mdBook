@@ -20,8 +20,9 @@ If you are interested in contributing to the development of mdBook, check out th
 **mdBook** has to be build and installed
 
 > Try **sitefix-book** as book example using **/doc/** as **site-url**  
+> or use full absolute URL complete with hostnames and schemas ends with **/**
 
-In [sitefix-book/book.toml](sitefix-book/book.toml) add **base_url** (base href) to rendered files with **site-url** value,  better if ends with **/**
+In [sitefix-book/book.toml](sitefix-book/book.toml) add **base_url** (base href) to rendered files with **site-url** value, ends with **/**
 
 In case relative path in **TOC** and **SUMMARY** is not fixed with **site-url** value:  
 
