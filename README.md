@@ -17,7 +17,7 @@ If you are interested in contributing to the development of mdBook, check out th
 
 ## How to use it
 
-**mdBook** has to be build and installed
+**mdBook** has to be build and optionally installed
 
 > Try **sitefix-book** as book example using **/doc/** as **site-url**  
 > or use full absolute URL complete with hostnames and schemas ends with **/**
@@ -49,6 +49,8 @@ You can use a script to automate builds:
 
 - Take care of: **paths**, **book.toml**, **index.hbs**, etc.
 - Use [mdBook](https://github.com/rust-lang/mdBook.git) to build rendered result to **dist** path rather than default **book**
+
+if not installed add build target path to **mdbook** (../target/debug/)
 
 ```bash
 mdbook build --dest-dir /tmp/site/doc
