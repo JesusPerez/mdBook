@@ -45,9 +45,9 @@ To complement this fix:
 
 [my-theme/index.hbs](sitefix-book/my-theme/index.hbs) is used to set **urlbase** in **previous** and **next** navigation
 
-Script to automate builds:
+You can use a script to automate builds:
 
-- Take care of: **book.toml**, **index.hbs**, etc.
+- Take care of: **paths**, **book.toml**, **index.hbs**, etc.
 - Use [mdBook](https://github.com/rust-lang/mdBook.git) to build rendered result to **dist** path rather than default **book**
 
 ```bash
