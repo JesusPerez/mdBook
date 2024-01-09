@@ -43,6 +43,8 @@ To complement this fix:
 ![Image]({{urlbase}}image.jpg)
 ```
 
+[my-theme/index.hbs](sitefix-book/my-theme/index.hbs) is used to set **urlbase** in **previous** and **next** navigation
+
 Script to automate builds:
 
 - Take care of: **book.toml**, **index.hbs**, etc.
