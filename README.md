@@ -53,10 +53,21 @@ You can use a script to automate builds:
 if not installed add build target path to **mdbook** (../target/debug/)
 
 ```bash
+mkdir -p /tmp/site/doc
 mdbook build --dest-dir /tmp/site/doc
 ```
 
-> By using these procedures default **book development** should work as expected
+IMPORTANT: **site-url** only works with **mdbook build** with **serve** option has no sense as it is for development and **site-url** is overwritten with local path.
+
+By using these procedures **sitefix-book** distribution build can be tested with
+
+```bash
+cd /tmp/site/doc
+python3 -m http.server
+```
+
+Use a web-browser for: http://localhost:3000/doc
+
 > For distribution or publish [mdBooks](https://github.com/rust-lang/mdBook.git) follow above instructions or use a script to set **<u>absolute_path</u>** in **book.toml** and **context.toml**
 
 ## License
