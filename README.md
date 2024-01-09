@@ -21,7 +21,7 @@ If you are interested in contributing to the development of mdBook, check out th
 
 > Try **sitefix-book** as book example using **/doc/** as **site-url**  
 > or use full absolute URL complete with hostnames and schemas ends with **/**
-> for example: http://localhost:8888/doc/
+> for example: http://localhost:3000/doc/
 
 In [sitefix-book/book.toml](sitefix-book/book.toml) add **base_url** (base href) to rendered files with **site-url** value, ends with **/**
 
