@@ -54,12 +54,7 @@ impl HtmlHandlebars {
                 .insert("git_repository_edit_url".to_owned(), json!(edit_url));
         }
 
-        let content = if let Some(site_url) = &ctx.html_config.site_url {
-            ch.content.clone().replace("](./",&format!("]({}",site_url))
-        } else {
-            ch.content.clone()
-        };
-        let content = utils::render_markdown(&content, ctx.html_config.curly_quotes);
+        let content = utils::render_markdown(&ch.content, ctx.html_config.curly_quotes);
 
         let fixed_content =
             utils::render_markdown_with_path(&ch.content, ctx.html_config.curly_quotes, Some(path));
@@ -490,25 +485,6 @@ impl HtmlHandlebars {
     }
 }
 
-// TODO(mattico): Remove some time after the 0.1.8 release
-fn maybe_wrong_theme_dir(dir: &Path) -> Result<bool> {
-    fn entry_is_maybe_book_file(entry: fs::DirEntry) -> Result<bool> {
-        Ok(entry.file_type()?.is_file()
-            && entry.path().extension().map_or(false, |ext| ext == "md"))
-    }
-
-    if dir.is_dir() {
-        for entry in fs::read_dir(dir)? {
-            if entry_is_maybe_book_file(entry?).unwrap_or(false) {
-                return Ok(false);
-            }
-        }
-        Ok(true)
-    } else {
-        Ok(false)
-    }
-}
-
 impl Renderer for HtmlHandlebars {
     fn name(&self) -> &str {
         "html"
@@ -540,16 +516,6 @@ impl Renderer for HtmlHandlebars {
             }
             None => ctx.root.join("theme"),
         };
-
-        if html_config.theme.is_none()
-            && maybe_wrong_theme_dir(&src_dir.join("theme")).unwrap_or(false)
-        {
-            warn!(
-                "Previous versions of mdBook erroneously accepted `./src/theme` as an automatic \
-                 theme directory"
-            );
-            warn!("Please move your theme files to `./theme` for them to continue being used");
-        }
 
         let theme = theme::Theme::new(theme_dir);
 
@@ -659,6 +625,10 @@ fn make_data(
     data.insert(
         "language".to_owned(),
         json!(config.book.language.clone().unwrap_or_default()),
+    );
+    data.insert(
+        "text_direction".to_owned(),
+        json!(config.book.realized_text_direction()),
     );
     data.insert(
         "book_title".to_owned(),
@@ -1100,6 +1070,8 @@ struct RenderItemContext<'a> {
 
 #[cfg(test)]
 mod tests {
+    use crate::config::TextDirection;
+
     use super::*;
     use pretty_assertions::assert_eq;
 
@@ -1310,5 +1282,11 @@ mod tests {
             );
             assert_eq!(&*got, *should_be);
         }
+    }
+
+    #[test]
+    fn test_json_direction() {
+        assert_eq!(json!(TextDirection::RightToLeft), json!("rtl"));
+        assert_eq!(json!(TextDirection::LeftToRight), json!("ltr"));
     }
 }
