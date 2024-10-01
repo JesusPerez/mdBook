@@ -54,10 +54,13 @@ impl HtmlHandlebars {
                 .insert("git_repository_edit_url".to_owned(), json!(edit_url));
         }
 
-        let content = utils::render_markdown(&ch.content, ctx.html_config.curly_quotes);
+        let content = utils::render_markdown(&ch.content, ctx.html_config.smart_punctuation());
 
-        let fixed_content =
-            utils::render_markdown_with_path(&ch.content, ctx.html_config.curly_quotes, Some(path));
+        let fixed_content = utils::render_markdown_with_path(
+            &ch.content,
+            ctx.html_config.smart_punctuation(),
+            Some(path),
+        );
         if !ctx.is_index && ctx.html_config.print.page_break {
             // Add page break between chapters
             // See https://developer.mozilla.org/en-US/docs/Web/CSS/break-before and https://developer.mozilla.org/en-US/docs/Web/CSS/page-break-before
@@ -158,13 +161,13 @@ impl HtmlHandlebars {
         let content_404 = if let Some(ref filename) = html_config.input_404 {
             let path = src_dir.join(filename);
             std::fs::read_to_string(&path)
-                .with_context(|| format!("unable to open 404 input file {:?}", path))?
+                .with_context(|| format!("unable to open 404 input file {path:?}"))?
         } else {
             // 404 input not explicitly configured try the default file 404.md
             let default_404_location = src_dir.join("404.md");
             if default_404_location.exists() {
                 std::fs::read_to_string(&default_404_location).with_context(|| {
-                    format!("unable to open 404 input file {:?}", default_404_location)
+                    format!("unable to open 404 input file {default_404_location:?}")
                 })?
             } else {
                 "# Document not found (404)\n\nThis URL is invalid, sorry. Please use the \
@@ -172,7 +175,8 @@ impl HtmlHandlebars {
                     .to_string()
             }
         };
-        let html_content_404 = utils::render_markdown(&content_404, html_config.curly_quotes);
+        let html_content_404 =
+            utils::render_markdown(&content_404, html_config.smart_punctuation());
 
         let mut data_404 = data.clone();
         let base_url = if let Some(site_url) = &html_config.site_url {
@@ -210,7 +214,7 @@ impl HtmlHandlebars {
         Ok(())
     }
 
-    #[cfg_attr(feature = "cargo-clippy", allow(clippy::let_and_return))]
+    #[allow(clippy::let_and_return)]
     fn post_process(
         &self,
         rendered: String,
@@ -241,7 +245,7 @@ impl HtmlHandlebars {
         )?;
 
         if let Some(cname) = &html_config.cname {
-            write_file(destination, "CNAME", format!("{}\n", cname).as_bytes())?;
+            write_file(destination, "CNAME", format!("{cname}\n").as_bytes())?;
         }
 
         write_file(destination, "book.js", &theme.js)?;
@@ -838,11 +842,7 @@ fn insert_link_into_header(
         .unwrap_or_default();
 
     format!(
-        r##"<h{level} id="{id}"{classes}><a class="header" href="#{id}">{text}</a></h{level}>"##,
-        level = level,
-        id = id,
-        text = content,
-        classes = classes
+        r##"<h{level} id="{id}"{classes}><a class="header" href="#{id}">{content}</a></h{level}>"##
     )
 }
 
@@ -864,12 +864,7 @@ fn fix_code_blocks(html: &str) -> String {
             let classes = &caps[2].replace(',', " ");
             let after = &caps[3];
 
-            format!(
-                r#"<code{before}class="{classes}"{after}>"#,
-                before = before,
-                classes = classes,
-                after = after
-            )
+            format!(r#"<code{before}class="{classes}"{after}>"#)
         })
         .into_owned()
 }
@@ -906,6 +901,7 @@ fn add_playground_pre(
                         Some(RustEdition::E2015) => " edition2015",
                         Some(RustEdition::E2018) => " edition2018",
                         Some(RustEdition::E2021) => " edition2021",
+                        Some(RustEdition::E2024) => " edition2024",
                         None => "",
                     }
                 };
@@ -926,8 +922,7 @@ fn add_playground_pre(
                             // we need to inject our own main
                             let (attrs, code) = partition_source(code);
 
-                            format!("# #![allow(unused)]\n{}#fn main() {{\n{}#}}", attrs, code)
-                                .into()
+                            format!("# #![allow(unused)]\n{attrs}#fn main() {{\n{code}#}}").into()
                         };
                         content
                     }
@@ -943,8 +938,9 @@ fn add_playground_pre(
 /// Modifies all `<code>` blocks to convert "hidden" lines and to wrap them in
 /// a `<span class="boring">`.
 fn hide_lines(html: &str, code_config: &Code) -> String {
-    let language_regex = Regex::new(r"\blanguage-(\w+)\b").unwrap();
-    let hidelines_regex = Regex::new(r"\bhidelines=(\S+)").unwrap();
+    static LANGUAGE_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"\blanguage-(\w+)\b").unwrap());
+    static HIDELINES_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"\bhidelines=(\S+)").unwrap());
+
     CODE_BLOCK_RE
         .replace_all(html, |caps: &Captures<'_>| {
             let text = &caps[1];
@@ -959,12 +955,12 @@ fn hide_lines(html: &str, code_config: &Code) -> String {
                 )
             } else {
                 // First try to get the prefix from the code block
-                let hidelines_capture = hidelines_regex.captures(classes);
+                let hidelines_capture = HIDELINES_REGEX.captures(classes);
                 let hidelines_prefix = match &hidelines_capture {
                     Some(capture) => Some(&capture[1]),
                     None => {
                         // Then look up the prefix by language
-                        language_regex.captures(classes).and_then(|capture| {
+                        LANGUAGE_REGEX.captures(classes).and_then(|capture| {
                             code_config.hidelines.get(&capture[1]).map(|p| p.as_str())
                         })
                     }
