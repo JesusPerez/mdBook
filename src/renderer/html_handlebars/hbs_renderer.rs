@@ -53,8 +53,12 @@ impl HtmlHandlebars {
             ctx.data
                 .insert("git_repository_edit_url".to_owned(), json!(edit_url));
         }
-
-        let content = utils::render_markdown(&ch.content, ctx.html_config.smart_punctuation());
+        let content = if let Some(site_url) = &ctx.html_config.site_url {
+            let ch = ch.content.clone().replace("](./",&format!("]({}",site_url));
+            utils::render_markdown(&ch, ctx.html_config.smart_punctuation())
+        } else {
+            utils::render_markdown(&ch.content, ctx.html_config.smart_punctuation())
+        };
 
         let fixed_content = utils::render_markdown_with_path(
             &ch.content,
